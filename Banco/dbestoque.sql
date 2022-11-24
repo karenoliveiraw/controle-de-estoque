@@ -217,3 +217,4 @@ select codigo as código, produto, date_format (dataval, '%d/%m/%Y') as data_val
  
  -- relatorio 6 (produtos vencidos)]
  select codigo as código, produto, localizacao as localização, date_format (dataval, '%d/%m/%Y') as data_validade, datediff(dataval, curdate()) as dias_vencidos from produtos where datediff(dataval, curdate()) < 0; 
+select * from fornecedores;
