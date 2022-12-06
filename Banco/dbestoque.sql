@@ -1,7 +1,7 @@
 /**
  * Projeto de um sistema para gestão de estoque
  * @authora Karen Oliveira
- * @version 1.2
+ * @version 1.6
  */
  
  create database dbestoque;
@@ -176,18 +176,22 @@ use dbestoque;
  idFor int not null,
  foreign key(idFor) references fornecedores(idFor)
  );
- describe produtos;
- insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, estoquemin,unidade,localizacao, custo, lucro, idFor) values ('11111111','Caneta BIC Azul','Caneta BIC cor azul, ponta fina CX 50','BIC',20231122,20,5,'CX','Prateleira 2',38.50,20, 4); 
- delete from produtos where codigo = 1;
- select * from produtos;
- insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, estoquemin,unidade,localizacao, custo, lucro, idFor) values ('22222222','Caneta BIC Vermelha','Caneta BIC cor vermelha, ponta fina CX 50','BIC',20231122,20,5,'CX','Prateleira 2',38.50,20, 5); 
- insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, estoquemin,unidade,localizacao, custo, lucro, idFor) values ('33333333','Caneta BIC Preta','Caneta BIC cor preta, ponta fina CX 50','BIC',20231122,20,5,'CX','Prateleira 2',38.50,20, 5);
- insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, estoquemin,unidade,localizacao, custo, lucro, idFor) values ('44444444','Caneta BIC Verde','Caneta BIC cor verde, ponta fina CX 50','BIC',20231122,20,5,'CX','Prateleira 2',38.50,20, 4);
+describe produtos;
+insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, estoquemin,unidade,localizacao, custo, lucro, idFor) values ('11111111','Caneta BIC Azul','Caneta BIC cor azul, ponta fina CX 50','BIC',20231122,20,5,'CX','Prateleira 2',38.50,20, 4); 
+delete from produtos where codigo = 1;
+select * from produtos;
+select * from produtos where barcode = 44444444;
+use dbestoque;
+   
+insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, estoquemin,unidade,localizacao, custo, lucro, idFor) values ('22222222','Caneta BIC Vermelha','Caneta BIC cor vermelha, ponta fina CX 50','BIC',20231122,20,5,'CX','Prateleira 2',38.50,20, 5); 
+insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, estoquemin,unidade,localizacao, custo, lucro, idFor) values ('33333333','Caneta BIC Preta','Caneta BIC cor preta, ponta fina CX 50','BIC',20231122,20,5,'CX','Prateleira 2',38.50,20, 5);
+insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, estoquemin,unidade,localizacao, custo, lucro, idFor) values ('44444444','Caneta BIC Verde','Caneta BIC cor verde, ponta fina CX 50','BIC',20231122,20,5,'CX','Prateleira 2',38.50,20, 4);
  insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, estoquemin,unidade,localizacao, custo, lucro, idFor) values ('55555555','Lapis','Lapis Faber Castell','Faber Castell',20231128,10,5,'CX','Prateleira 4',38.50,20, 4);
  insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, estoquemin,unidade,localizacao, custo, lucro, idFor) values ('66666666','Cola bastão pritt','Cola bastão marca Pritt','Pritt',20221002,10,2,'UN','Prateleira 3',1.25,50, 4);
 insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, estoquemin,unidade,localizacao, custo, lucro, idFor) values  ('77777777','Teclado','Teclado Gamer (Branco)','Asus',20231122,2,5,'UN','Prateleira 1',50.00,50, 4);
 insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, estoquemin,unidade,localizacao, custo, lucro, idFor) values  ('99999999','Cola','Cola','Pritt',20211002,50,5,'CX','Prateleira 2',40.50,100.0, 4);
- 
+ insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, estoquemin,unidade,localizacao, custo, lucro, idFor) values  ('7896572022785','Caneta Compactor','Canecta ponta fina','Compactor',20251002,6,5,'CX','Prateleira 3',4.50,50, 4);
+
  
  /*
  Relatorios  (select especial)
@@ -195,6 +199,7 @@ insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, 
  -- relatorio 1 (unificar produtos com fornecedores)alter
  -- produtos.idFor é a chave estrangeira (FK) // fornecedores.idFor(PK)
  select * from produtos inner join fornecedores
+ 
  on produtos.idFor = fornecedores.idFor; 
  
  -- relatorio 2 (fornecedor relacionado ao produto)
@@ -209,12 +214,26 @@ insert into produtos (barcode, produto, descricao, fabricante, dataval,estoque, 
   
   -- relatorio 4 (calcular o preço de venda)
   
-select codigo as Código, produto, custo, (custo + (custo * lucro) /100) as venda from produtos;
+select codigo as Código, produto, custo, (custo + (custo * lucro) /100) 
+as venda from produtos;
+use dbestoque;
 
 -- relatorio 5 (reposição de estoque)
 -- '%d/%m/%Y' (dd/mm/aaaa '%d/%m/%Y' (dd/mm/aa)
-select codigo as código, produto, date_format (dataval, '%d/%m/%Y') as data_validade, estoque, estoquemin as estoque_mínimo from produtos where estoque < estoquemin;
+select codigo as código, produto, date_format (dataval, '%d/%m/%Y') as data_validade,
+ estoque, estoquemin as estoque_mínimo from produtos
+ where estoque < estoquemin;
  
- -- relatorio 6 (produtos vencidos)]
- select codigo as código, produto, localizacao as localização, date_format (dataval, '%d/%m/%Y') as data_validade, datediff(dataval, curdate()) as dias_vencidos from produtos where datediff(dataval, curdate()) < 0; 
+ -- relatorio 5.1 (versão impressão)
+ select codigo,produto,
+date_format(dataval,'%d/%m/%Y'), estoque, estoquemin
+from produtos where estoque < estoquemin;
+
+ -- relatorio 6 (produtos vencidos)
+ 
+ select codigo as código, produto, localizacao as localização, 
+ date_format (dataval, '%d/%m/%Y') as data_validade, datediff(dataval, curdate())
+ as dias_vencidos from produtos where datediff(dataval, curdate()) < 0; 
+ 
 select * from fornecedores;
+
